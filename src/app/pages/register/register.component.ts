@@ -3,20 +3,22 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../interfaces/user.interface';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   username: string = '';
   password: string = '';
+  _id:number | undefined = 0;
   users: User[] = []; // Usar la interfaz User[]
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     // Cargar usuarios existentes al iniciar el componente
     this.loadUsers();
   }
@@ -45,7 +47,8 @@ export class RegisterComponent {
       // Agregar el nuevo usuario al array
     const newUser: User = {
       usuario: this.username,
-      pass: this.password
+      pass: btoa(this.password), //btoa
+      _id: Math.round(Math.random()*10000)
     };
     this.users.push(newUser);
 
@@ -53,6 +56,7 @@ export class RegisterComponent {
     this.http.put('https://webapp-angular-tgn-2024-default-rtdb.europe-west1.firebasedatabase.app/usuarios.json', this.users).subscribe(
       () => {
         alert('Registro exitoso');
+        this.router.navigate(['/login']); // Redirige a la ruta /login
         this.username = '';
         this.password = '';
       },

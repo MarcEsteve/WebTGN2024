@@ -1,10 +1,30 @@
-<div class="ae-grid au-xs-ta-center au-mb-4">
-    <div
-      *ngFor="let usuario of usuarios"
-      class="animate__animated animate__fadeIn ae-grid__item item-lg-4 ae-kappa au-mb-3"
-    >
-      <h5 class="ae-u-bolder au-mt-2">{{ usuario.nom }}</h5>
-      <p class="ae-u-bolder au-mb-3">{{ usuario.titulo }}</p>
-      <p class="au-lg-ta-left au-mb-3 au-pl-4 au-pr-4">{{ usuario.frase }}</p>
-    </div>
+<h1>Datos de usuario</h1>
+<div
+  *ngIf="authService.isLoggedIn()"
+  class="animate__animated animate__fadeIn ae-grid au-xs-ta-center au-mb-4 container"
+>
+  <!-- <div
+    class="ae-grid__item item-lg-4 ae-kappa au-mb-3"
+  > -->
+  <h3 class="ae-u-bolder au-mb-3 container-grid">Usuario: {{ authService.getUsername() | titlecase }} - ID: {{ usuario?._id }}</h3>
+  <div class="container-grid">
+    <p class="au-lg-ta-left ae-u-bolder au-mb-3 au-pl-4 au-pr-4">Nombre: {{ usuario?.usuario | titlecase }}</p>
+    <p class="au-lg-ta-left au-mb-3 au-pl-4 au-pr-4">Correo: {{ usuario?.correo }}</p>
+    <p class="au-lg-ta-left au-mb-3 au-pl-4 au-pr-4">Profesión: {{ usuario?.profesion }}</p>
+    <p class="au-lg-ta-left au-mb-3 au-pl-4 au-pr-4">Rol: {{ usuario?.rol }}</p>
+    <p class="au-lg-ta-left au-mb-3 au-pl-4 au-pr-4">Teléfono: {{ usuario?.telefono }}</p>
+    <p class="au-lg-ta-left au-mb-3 au-pl-4 au-pr-4">Pass: {{ psw | password }}</p>
   </div>
+  <button (click)="authService.logout()">Cerrar sesión</button>
+</div>
+
+<!-- </div> -->
+<div class="container" *ngIf="authService.isLoggedIn() === false">
+  <div
+    class="animate__animated animate__fadeIn ae-grid au-xs-ta-center au-mb-4"
+  >
+    <h5 class="ae-u-bolder au-mt-2">Sesión cerrada</h5>
+    <button><a routerLink="/login">Iniciar sesión</a></button>
+    <button><a routerLink="/register">Registrarse</a></button>
+  </div>
+</div>

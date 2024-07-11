@@ -2,12 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-interface User {
-  usuario: string;
-  pass: string;
-}
+import { User } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +21,8 @@ export class AuthService {
   }
 
   login(username: string, password: string): boolean {
-    const user = this.users.find(user => user.usuario === username && user.pass === password);
+    const user = this.users.find(user => user.usuario === username && atob(user.pass) === password);
+    // atob
     if (user) {
       this.cookieService.set('username', username, { expires: 2, sameSite: 'Lax' });
       this.cookieService.set('isLoggedIn', 'true', { expires: 2, sameSite: 'Lax' });
@@ -47,4 +43,10 @@ export class AuthService {
     this.cookieService.delete('username');
     this.cookieService.delete('isLoggedIn');
   }
+
+  getUsuarioDB(): User | undefined {
+    const username = this.getUsername();
+    return this.users.find(user => user.usuario === username);
+  }
+
 }
